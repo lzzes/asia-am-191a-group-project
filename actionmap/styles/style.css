@@ -222,3 +222,8 @@ footer {
   z-index: 1;
   position: relative;
 }
+
+/* Added for testimonial dropdowns */
+summary {
+  font-weight: bold;
+}
