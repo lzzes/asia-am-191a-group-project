@@ -23,77 +23,62 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
-main {
-    display: grid;
-    grid-template-areas:
-        "portfolio mapheader"
-        "portfolio map";
-    grid-template-columns: 1fr 1fr;
-}
-
 header {
     grid-area: header;
 }
 
 main {
     grid-area: main;
-    padding: 10px;
-}
 
-.portfolio {
-    grid-area: portfolio;
-}
-
-.portfolio img {
-    max-width: 200px;
-}
-
-#map {
-    grid-area: map;
-    height: 50vh;
-    row-gap: 20px;
-    gap: 100px;
-}
-
-#mapheader{
-    grid-area: mapheader;
-    height: 10vh;
-    justify-content: center;
-    align-items: center;
     display: grid;
+
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 25vh 1fr;
+
+    /* the orientation is like this:   ________________
+                                      |______top______|
+                                      | portf.| maps  |
+    */
+    grid-template-areas:
+        "top top"
+        "portfolio maps";
+
+    padding: 10px;
+    gap: 20px;
 }
 
-#contents{
+#top {
+    grid-area: top;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
     align-items: center;
+    gap: 10px; 
+}
+
+#portfolio {
     display: flex;  
-    gap: 10px;
-    row-gap: 20px; 
+    grid-area: portfolio;
+    flex-direction: column;
+}
+.person-card {
+    margin-bottom: 30px; /* put spaces between the testimonials */
+}
+
+#maps {
+    display: flex;  
+    grid-area: maps;
     justify-content: center;
     align-items: center;
 }
 
-#GAPpls{
-    grid-area: GAPpls;
-    height: 5vh;
-    align-items: center;
-    justify-content:center;
-    display:grid;
-    gap: 10px;
-
-}
 
 footer {
     grid-area: footer;
 }
 
-.myButton{
-  padding: 10px 15px; 
-  font-size: 15px; 
-  background-color: rgb(252, 213, 253);
-  border-radius: 24px;
-  font-weight: 500;
-
-}
 
 /* CSS */
 .button-17 {
