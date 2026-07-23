@@ -49,6 +49,7 @@ main {
 
 #top {
     grid-area: top;
+    background-color: rgb(255, 255, 255);
 
     display: flex;
     flex-direction: column;
@@ -151,7 +152,7 @@ footer {
 
 .button-48 {
   appearance: none;
-  background-color: #FFFFFF;
+  background-color: #ffe6e6;
   border-width: 0;
   box-sizing: border-box;
   color: #000000;
