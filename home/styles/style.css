@@ -63,7 +63,7 @@ main {
     grid-area: portfolio;
     flex-direction: column;
 }
-.person-card {
+.testimonyChunk {
     margin-bottom: 30px; /* put spaces between the testimonials */
 }
 

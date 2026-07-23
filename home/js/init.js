@@ -20,12 +20,12 @@ function addMarker(lat,lng,location,message,person, date){
     return message
 }
 
-
+// creating not just the button but the whole testimonial chunk too
  function createButtons(lat,lng,message,person,location,date){
     //stuff i need to define in order to add things to portfolio section
     const portfolio = document.getElementById("portfolio");
     const wrapper = document.createElement("div");
-    wrapper.classList.add("person-card");
+    wrapper.classList.add("testimonyChunk");
 
     // all of da button stuffs
     const newButton = document.createElement("button"); 
@@ -43,11 +43,11 @@ function addMarker(lat,lng,location,message,person, date){
    
     // make a new header w the location + date
     const heading = document.createElement("h4");
-    heading.textContent = location + ", " + date; // Your header text string
+    heading.textContent = location + ", " + date; 
 
     // insert the testimonial text
     const paragraph = document.createElement("p");
-    paragraph.textContent = message; // Your paragraph text string
+    paragraph.textContent = message; 
 
     // i don;t really know the guide online told me to do this. something about the divisions
     wrapper.appendChild(newButton);
