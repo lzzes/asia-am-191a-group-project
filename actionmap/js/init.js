@@ -21,23 +21,23 @@ function addMarker(lat,lng,title,message){
         .setPopup(new maplibregl.Popup()
             .setHTML(popup_message))
         .addTo(map)
-    createButtons(lat,lng,title);
+    createButtons(lat,lng,title,message);
     return message
 }
 
 
 let results;
-map.on('load',function(){
-    console.log("girl. it's loaded.")
-    fetch('untitled.geojson')
-         .then(data =>{
-            return data.json();
-    })
-         .then(data =>{
-            console.log(data)
-            data.features.forEach(processData);
-    })
-});
+// map.on('load',function(){
+//     console.log("girl. it's loaded.")
+//     fetch('untitled.geojson')
+//          .then(data =>{
+//             return data.json();
+//     })
+//          .then(data =>{
+//             console.log(data)
+//             data.features.forEach(processData);
+//     })
+// });
 
 function processData(result){
     console.log(result)
@@ -50,10 +50,10 @@ function processData(result){
 }
 
 
-function createButtons(lat,lng,title){
+function createButtons(lat,lng,title,message){
     const newButton = document.createElement("button");
     newButton.id = "button"+title;
-    newButton.innerHTML = title;
+    newButton.innerHTML =  `<details><summary>${title}</summary><p>${message}</p>`;
     newButton.setAttribute("lat",lat);
     newButton.setAttribute("lng",lng);
     newButton.classList.add("button-17")
@@ -68,7 +68,7 @@ function createButtons(lat,lng,title){
 }
 
 
-
+addMarker(34.5, 117.8, "Here","Message")
 
 //.forEach => 
 //to add to arrays use arrayName.push(thing)
