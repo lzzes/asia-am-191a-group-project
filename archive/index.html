@@ -8,11 +8,13 @@
         <link rel="shortcut icon" href="#">
         <link rel="stylesheet" href="styles/style.css">
 
-        <!-- MapLibreGL's css-->
-        <link rel="stylesheet" href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" />
+        <!-- MapLibreGL's CSS-->
+        <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.css" />
 
         <!-- MapLibreGL's JavaScript-->
-        <script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+        <script src="https://unpkg.com/maplibre-gl@5.0.0/dist/maplibre-gl.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
     </head>
 
     <body>
@@ -23,37 +25,14 @@
         </header>
 
         <main>
-            <div class="portfolio">
-                <div id="contents"></div>
-                <!-- Portfolio content goes here -->
-                <h1> TITLE? </h1>
-                    describe the page
-
-                <h2>Actions with Testimonials</h2>
-                <h3> action name 1</h3>
-                <p class="center=text"> hello my name is testimonial </p>
-                <p> hello i'm testimonial 2</p>
-                <h3> Action 2 </h3>
-                <p> testimonial again</p>
-
-                <h2> Other Actions</h2>
-                <h3> action name 3</h3>
-                <h3> action name 4</h3>
-                <h3> action name 5</h3>
-                <h3> action name 6</h3>
+            <div id = "list">
+                <div id = "testimonies"></div> <!-- where the actions w/ testimonies load -->
+                <div id = "actions"></div> <!-- where actions w/o testimonies load -->
             </div>
 
-        <div>
-            <div id = "mapheader"> 
-                <h3> Map of Actions, with and without testimonials </h3>
-            </div>
-
-            <div id="contents">
-                 why this map is important, what the colors mean, etc.
-            </div>
-        </div>
-            <div id="map"></div>
+            <div id = "map"> </div> <!-- map goes here -->
         </main>
+
         <div id="footer">
             Copyright(2026)
         </div>

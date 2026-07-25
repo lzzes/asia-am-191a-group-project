@@ -1,16 +1,16 @@
 * {
-    font-family:Georgia, 'Times New Roman', Times, serif  ;
+    font-family: Clarkson,Helvetica,sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
 html{
-    background-color: rgb(251, 253, 213);
+    background-color: rgb(217, 234, 201);
 }
 
 html, body {
-    height: 80vh;
+    min-height: 100vh;
     padding: 1rem;
 }
 
@@ -27,21 +27,28 @@ header {
     grid-area: header;
 }
 
+/* I'm not going to lie there's so much bs going on in main. some things i don't even know
+  whether or not they're just dead weight bc i was trying different things and not deleting
+  other stuff. idk. if you're confused ask me and i can probably try to explain what's happening */
+
 main {
     grid-area: main;
 
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 25vh 1fr;
+   grid-template-columns: 1fr 1fr;
+   grid-template-rows: 25vh repeat(3, minmax(400px, auto));
 
     /* the orientation is like this:   ________________
                                       |______top______|
-                                      | portf.| maps  |
+                                      | port1| maps1  |
+                                        etc etc etc etc
     */
     grid-template-areas:
         "top top"
-        "portfolio maps";
+        "port1 maps1"
+        "port2 maps2"
+        "port3 maps3";
 
     padding: 10px;
     gap: 20px;
@@ -59,21 +66,86 @@ main {
     gap: 10px; 
 }
 
-#portfolio {
+/* port1-3 and maps1-3 are each grid sections.
+  the content (i.e. text and literal maps) are not 
+  directly loading into these sections. see below. */
+#port1 {
     display: flex;  
-    grid-area: portfolio;
+    grid-area: port1;
     flex-direction: column;
-}
-.testimonyChunk {
-    margin-bottom: 30px; /* put spaces between the testimonials */
-}
-
-#maps {
-    display: flex;  
-    grid-area: maps;
     justify-content: center;
     align-items: center;
 }
+
+#maps1 {
+    display: flex;  
+    grid-area: maps1;
+    justify-content: center;
+    align-items: center;
+} 
+
+#port2 {
+    display: flex;  
+    grid-area: port2;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#maps2 {
+    display: flex;  
+    grid-area: maps2;
+    justify-content: center;
+    align-items: center;
+}
+
+#port3 {
+    display: flex;  
+    grid-area: port3;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#maps3 {
+    display: flex;  
+    grid-area: maps3;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* these are mini sections inside of each maps section, 
+so that the literal map doesn't expand to the entire grid area */
+/* this mini-sections are the IDs where the literal maps are loading into */
+#map1, #map2, #map3 {
+    width: 60%;
+    height: 350px;
+}
+
+/* mini sections inside of each port section, 
+so that the text doesn't expand to the entire grid area */
+/* these are the IDs that the testimonials are directly added to */
+#portfolio1, #portfolio2, #portfolio3 {
+    background-color: rgb(244, 255, 234);
+    width: 60%;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 20px;
+    line-height: 1.6; 
+}
+
+/* tbh idek if this is really relevant anymore... i had a function
+doing some stuff and then i changed the function idfk */
+.testimonyChunk {
+    margin-bottom: 30px; /* put spaces between the testimonials */
+    text-align: center;
+    justify-content: center; /* boi ts doesn't work... i thought this would vertical center but no. idfk */
+    align-items: center;
+} 
 
 
 footer {
@@ -81,11 +153,11 @@ footer {
 }
 
 
-/* CSS */
+/* button 17 and 48 styling below */
 .button-17 {
   align-items: center;
   appearance: none;
-  background-color: rgb(199, 223, 251);
+  background-color: rgb(255, 255, 255);
   border-radius: 24px;
   border-style: none;
   box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
@@ -116,8 +188,8 @@ footer {
 }
 
 .button-17:hover {
-  background: #F6F9FE;
-  color: #174ea6;
+  background: #6e8964;
+  color: #ffffff;
 }
 
 .button-17:active {
@@ -183,7 +255,7 @@ footer {
 .button-48:before {
   animation: opacityFallbackOut .5s step-end forwards;
   backface-visibility: hidden;
-  background-color: #89b572;
+  background-color: #bf8b8b;
   clip-path: polygon(-1% 0, 0 0, -25% 100%, -1% 100%);
   content: "";
   height: 100%;
@@ -201,7 +273,7 @@ footer {
 }
 
 .button-48:after {
-  background-color: #89b572;
+  background-color: #bf8b8b;
 }
 
 .button-48 span {
