@@ -26,8 +26,7 @@ body {
 main {
     display: grid;
     grid-template-areas:
-        "portfolio mapheader"
-        "portfolio map";
+        "list map";
     grid-template-columns: 1fr 1fr;
 }
 
@@ -40,13 +39,32 @@ main {
     padding: 10px;
 }
 
-.portfolio {
-    grid-area: portfolio;
+#list {
+    grid-area: list;
 }
 
-.portfolio img {
-    max-width: 200px;
+#testimonies{
+  width: 80%;
+  background-color: rgb(218, 213, 253);
+  padding: 20px;
+  margin-bottom: 20px;
 }
+
+.testimonyChunk {
+    margin-bottom: 30px; /* put spaces between the testimonials */
+    text-align: center;
+    justify-content: center; /* boi ts doesn't work... i thought this would vertical center but no. idfk */
+    align-items: center;
+} 
+
+#actions{
+  background-color: rgb(114, 198, 133);
+  width: 80%;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+
 
 #map {
     grid-area: map;
@@ -99,7 +117,7 @@ footer {
 .button-17 {
   align-items: center;
   appearance: none;
-  background-color: rgb(199, 223, 251);
+  background-color: rgb(255, 255, 255);
   border-radius: 24px;
   border-style: none;
   box-shadow: rgba(0, 0, 0, .2) 0 3px 5px -1px,rgba(0, 0, 0, .14) 0 6px 10px 0,rgba(0, 0, 0, .12) 0 1px 18px 0;
@@ -130,8 +148,8 @@ footer {
 }
 
 .button-17:hover {
-  background: #F6F9FE;
-  color: #174ea6;
+  background: #537a42;
+  color: #ffffff;
 }
 
 .button-17:active {
@@ -221,4 +239,9 @@ footer {
 .button-48 span {
   z-index: 1;
   position: relative;
+}
+
+/* Added for testimonial dropdowns */
+summary {
+  font-weight: bold;
 }
