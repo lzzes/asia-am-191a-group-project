@@ -1,5 +1,15 @@
 // Declare global variables
 
+/*let displayYear = 2023;
+
+const btn = document.querySelector("#yr2023");
+btn.addEventListener("click", () => {updateYear(2024)});
+
+function updateYear(yr) {
+    displayYear = yr;
+    console.log("clicl");
+    location.reload();
+}*/
 
 let mapOptions = {
     "zoom": 15,
@@ -31,7 +41,7 @@ map.on('load', function() {
 function processData(results){
     let IDarray = new Array(30);
 
-    let ID, lng, lat, location, action, date, repression, memory;
+    let ID, lng, lat, location, action, date, repression, memory, call;
     results.forEach(feature => {
         console.log(feature)
         ID = feature.ID;
@@ -40,26 +50,33 @@ function processData(results){
         location = feature["Mapping Location"];
         action = feature.Name;
         date = feature.Date;
-        repression = feature["Did the university engage or respond to this action in any way? "];
+        year = feature.Year;
         memory = feature["What was the most memorable part of the action? "];
+        call = feature["Short Description/Call"];
 
-        //if testimonial exists AND the event has not already been added:
-        if (memory != false && IDarray.includes(ID) == false){
-            IDarray.push(ID);
-            addTestimonial(lng,lat,ID,location,action,date,repression,memory);
+        repression = feature["Did the university engage or respond to this action in any way? "];
+        if (repression == "Yes") {
+            repression = feature["If yes, how? "];
         }
-        //else if testimonial exists for an already-added event:
-        else if (memory != false){
-            repeatTestimonial(repression,memory);
-        }
-        //else, the action has no testimony
-        else {
-            addAction(lat,lng,location,action,date);
-        }
+        /*if (year == displayYear) {*/
+            //if testimonial exists AND the event has not already been added:
+            if (memory != false && IDarray.includes(ID) == false){
+                IDarray.push(ID);
+                addTestimonial(lng,lat,ID,location,action,date,repression,memory,call);
+            }
+            //else if testimonial exists for an already-added event:
+            else if (memory != false){
+                repeatTestimonial(repression,memory);
+            }
+            //else, the action has no testimony
+            else {
+                addAction(lat,lng,location,action,date,call);
+            }
+        /*}*/
     });
 }
 
-function addTestimonial(lng,lat,ID,location,action,date,repression,memory){
+function addTestimonial(lng,lat,ID,location,action,date,repression,memory,call){
     //stuff i need to define in order to add things to portfolio section
     const testimoniesDef = document.getElementById("testimonies");
     const wrapper = document.createElement("div");
@@ -80,21 +97,33 @@ function addTestimonial(lng,lat,ID,location,action,date,repression,memory){
     });
    
     // make a new header w the location + date
-    const heading3 = document.createElement("h3");
+    const heading3 = document.createElement("h4");
     heading3.textContent = location + ", " + date; 
 
-    const heading4 = document.createElement("h4");
+    const desc = document.createElement("p");
+    desc.textContent = call;
+
+    const spacer = document.createElement("br");
+
+    const heading4 = document.createElement("b");
     heading4.textContent = "One person testifies:"
 
     // insert paragraph of testimonial text
-    const paragraph = document.createElement("p");
-    paragraph.textContent = "Testified repression: " + repression + " Memories associated: " + memory; 
+    const paragraph1 = document.createElement("p");
+    paragraph1.textContent = 'Testified repression: ' + repression;
+
+    // insert paragraph of testimonial text
+    const paragraph2 = document.createElement("p");
+    paragraph2.textContent = 'Testified memory: "' + memory + '"';
 
     // i don;t really know the guide online told me to do this. something about the divisions
     wrapper.appendChild(newButton);
     wrapper.appendChild(heading3);
+    wrapper.appendChild(desc);
+    wrapper.appendChild(spacer);
     wrapper.appendChild(heading4);
-    wrapper.appendChild(paragraph);
+    wrapper.appendChild(paragraph1);
+    wrapper.appendChild(paragraph2);
     testimoniesDef.appendChild(wrapper);
 
     addMarker(lng,lat,action, date);
@@ -106,20 +135,25 @@ function repeatTestimonial(repression,memory){
     wrapper.classList.add("testimonyChunk");
 
         // make a new header w the location + date
-    const heading = document.createElement("h4");
+    const heading = document.createElement("b");
     heading.textContent = "Another testifies:";
 
     // insert paragraph of testimonial text
-    const paragraph = document.createElement("p");
-    paragraph.textContent = "Testified repression: " + repression + " Memories associated: " + memory; 
+    const paragraph1 = document.createElement("p");
+    paragraph1.textContent = "Testified repression: " + repression;
+
+    // insert paragraph of testimonial text
+    const paragraph2 = document.createElement("p");
+    paragraph2.textContent = 'Testified memory: "' + memory + '"';
 
     // i don;t really know the guide online told me to do this. something about the divisions
     wrapper.appendChild(heading);
-    wrapper.appendChild(paragraph);
+    wrapper.appendChild(paragraph1);
+    wrapper.appendChild(paragraph2);
     testimoniesDef.appendChild(wrapper);
 }
 
-function addAction(lat,lng,location,action,date){
+function addAction(lat,lng,location,action,date,call){
  //stuff i need to define in order to add things to portfolio section
     const actionsDef = document.getElementById("actions");
     const wrapper = document.createElement("div");
@@ -143,9 +177,13 @@ function addAction(lat,lng,location,action,date){
     const heading = document.createElement("h4");
     heading.textContent = location + ", " + date;  
 
+    const desc = document.createElement("p");
+    desc.textContent = call;
+
     // i don;t really know the guide online told me to do this. something about the divisions
     wrapper.appendChild(newButton);
     wrapper.appendChild(heading);
+    wrapper.appendChild(desc);
     actionsDef.appendChild(wrapper);
 
     addMarker(lng,lat,action, date);
