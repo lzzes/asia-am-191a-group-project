@@ -41,7 +41,7 @@ map.on('load', function() {
 function processData(results){
     let IDarray = new Array(30);
 
-    let ID, lng, lat, location, action, date, repression, memory, call;
+    let ID, lng, lat, location, action, date, repression, memory, call, form;
     results.forEach(feature => {
         console.log(feature)
         ID = feature.ID;
@@ -53,6 +53,7 @@ function processData(results){
         year = feature.Year;
         memory = feature["What was the most memorable part of the action? "];
         call = feature["Short Description/Call"];
+        form = feature["Action Form"];
 
         repression = feature["Did the university engage or respond to this action in any way? "];
         if (repression == "Yes") {
@@ -62,21 +63,21 @@ function processData(results){
             //if testimonial exists AND the event has not already been added:
             if (memory != false && IDarray.includes(ID) == false){
                 IDarray.push(ID);
-                addTestimonial(lng,lat,ID,location,action,date,repression,memory,call);
+                addTestimonial(lng,lat,ID,location,action,date,repression,memory,call, form);
             }
             //else if testimonial exists for an already-added event:
             else if (memory != false){
-                repeatTestimonial(repression,memory);
+                repeatTestimonial(repression,memory, form);
             }
             //else, the action has no testimony
             else {
-                addAction(lat,lng,location,action,date,call);
+                addAction(lat,lng,location,action,date,call, form);
             }
         /*}*/
     });
 }
 
-function addTestimonial(lng,lat,ID,location,action,date,repression,memory,call){
+function addTestimonial(lng,lat,ID,location,action,date,repression,memory,call, form){
     //stuff i need to define in order to add things to portfolio section
     const testimoniesDef = document.getElementById("testimonies");
     const wrapper = document.createElement("div");
@@ -126,7 +127,7 @@ function addTestimonial(lng,lat,ID,location,action,date,repression,memory,call){
     wrapper.appendChild(paragraph2);
     testimoniesDef.appendChild(wrapper);
 
-    addMarker(lng,lat,action, date);
+    addMarker(lng,lat,action, date, form);
 }
 
 function repeatTestimonial(repression,memory){
@@ -153,7 +154,7 @@ function repeatTestimonial(repression,memory){
     testimoniesDef.appendChild(wrapper);
 }
 
-function addAction(lat,lng,location,action,date,call){
+function addAction(lat,lng,location,action,date,call, form){
  //stuff i need to define in order to add things to portfolio section
     const actionsDef = document.getElementById("actions");
     const wrapper = document.createElement("div");
@@ -186,14 +187,23 @@ function addAction(lat,lng,location,action,date,call){
     wrapper.appendChild(desc);
     actionsDef.appendChild(wrapper);
 
-    addMarker(lng,lat,action, date);
+    addMarker(lng,lat,action, date, form);
 }
 
 //if we wanted to we could pass in the action type here. would have to go back a ways though
 // because we only arrive here by passing through at least one other function
-function addMarker(lng,lat,action, date){
+function addMarker(lng,lat,action, date, form){
     let popup_message = `<h2>${action}</h2> <h3>${date}</h3>`
-    new maplibregl.Marker()
+
+    let clr;
+    if (form=="Walkout") clr = "#6A7FDE"
+    if (form=="Rally") clr = "#DE7D6A"
+    if (form=="Die-in") clr = "#DEC96A"
+    if (form=="Picket") clr = "#6CDE6A"
+    if (form=="Encampment") clr = "#AE6ADE"
+    if (form == "Other") clr = "#DE6ADE"
+
+    new maplibregl.Marker({color: clr})
         .setLngLat([lng, lat])
         .setPopup(new maplibregl.Popup().setHTML(popup_message))
         .addTo(map)
