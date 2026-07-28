@@ -18,6 +18,8 @@ let mapOptions = {
 
 let dataUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQl_X4nqI_LmgvWzm_OMkH-uAkYyf3T8M5wxARgbjR30lbC7cfztoJ6gEvmC57nV7sks846j5uEtaS_/pub?gid=592139015&single=true&output=csv"
 
+// Map Options
+
 // Initialize the map
 const map = new maplibregl.Map({
     container: 'map',
@@ -27,14 +29,79 @@ const map = new maplibregl.Map({
 });
 
 map.on('load', function() {
-    // Use PapaParse to fetch and parse the CSV data from a Google Forms spreadsheet URL
-    Papa.parse(dataUrl, {
-        download: true, // Tells PapaParse to fetch the CSV data from the URL
-        header: true, // Assumes the first row of your CSV are column headers
-        complete: (results) => {
-            processData(results.data);
-        }
+    // Load Polygons of Campus
+
+    map.addSource('polygons',{
+        'type': 'geojson',
+        'data': 'campus-map.geojson'
+    })
+
+    map.addLayer({
+      id: 'polygons-fill',
+      type: 'fill',
+      source: 'polygons',
+      paint: {
+        'fill-color': '#999999',
+        'fill-opacity': 0.2
+      }
     });
+
+    map.addLayer({
+      id: 'polygons-outline',
+      type: 'line',
+      source: 'polygons',
+      paint: {
+        'line-color': '#444444',
+        'line-width': 2
+      }
+    });
+
+    map.on('click','polygons-fill', (e) => {
+
+        let area = e.features[0].properties.Region
+        console.log(area);
+
+        // Zoom to the centroid
+        let centerpt = turf.centroid(e.features[0]).geometry.coordinates;
+        console.log(centerpt);
+        map.flyTo({center: centerpt, zoom: 15});
+
+        // load events and testimonies
+        // Use PapaParse to fetch and parse the CSV data from a Google Forms spreadsheet URL
+    
+        Papa.parse(dataUrl, {
+            download: true, // Tells PapaParse to fetch the CSV data from the URL
+            header: true, // Assumes the first row of your CSV are column headers
+            complete: (results) => {
+                processData(results.data);
+            }
+        });
+    })
+
+    //         let S_Campus = turf.polygon(data.features[0].geometry.coordinates);
+    //         let N_Campus = turf.polygon(data.features[1].geometry.coordinates);
+    //         let C_Campus = turf.polygon(data.features[2].geometry.coordinates);
+    //         let Hill = turf.polygon(data.features[3].geometry.coordinates);
+    //         let Med = turf.polygon(data.features[4].geometry.coordinates);
+    //     return S_Campus, N_Campus, C_Campus, Hill, Med
+    // })
+
+
+    /* Load Targets
+    const targets = {
+        'Walkout':'Walkout',
+        'Rally':'Rally',
+        'Die-in':'Die-in',
+        'Picket':'Picket',
+        'Encampment':'Encampment',
+        'Other':'Other'
+    };
+    map.addControl(new MaplibreLegendControl.MaplibreLegendControl(targets, {
+        showDefault: false, 
+        showCheckbox: false, 
+        onlyRendered: true,
+        reverseOrder: true
+    }), 'top-right'); */
 });
 
 
@@ -42,6 +109,9 @@ function processData(results){
     let IDarray = new Array(30);
 
     let ID, lng, lat, location, action, date, repression, memory, call, form;
+
+    let pts = new Array();
+
     results.forEach(feature => {
         console.log(feature)
         ID = feature.ID;
@@ -54,6 +124,9 @@ function processData(results){
         memory = feature["What was the most memorable part of the action? "];
         call = feature["Short Description/Call"];
         form = feature["Action Form"];
+
+        // Add locations into array for searching within Polygon
+        pts.push([parseFloat(lng), parseFloat(lat)]);
 
         repression = feature["Did the university engage or respond to this action in any way? "];
         if (repression == "Yes") {
@@ -74,7 +147,14 @@ function processData(results){
                 addAction(lat,lng,location,action,date,call, form);
             }
         /*}*/
-    });
+    }); 
+    
+    let all_events = turf.points(pts)
+    // var SC_Events = turf.pointsWithinPolygon(all_events, S_Campus);
+    // console.log(SC_Events)
+
+
+
 }
 
 function addTestimonial(lng,lat,ID,location,action,date,repression,memory,call, form){
@@ -259,23 +339,9 @@ document.body.addEventListener('click', function(e) {
         // your code
     // console.log(e.target.id)
 });
-// document.iframe.addEventListener('click', closeModal, true); 
 
-/* // Get the modal
-var modal = document.getElementById("surveyModal");
 
-// Get the button that opens the modal
-var btn = document.getElementById("surveyBtn");
 
-// Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
 
-// When the user clicks on the button, open the modal
-btn.onclick = function() {
-  modal.style.display = "grid";
-}
 
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
-  modal.style.display = "none";
-} */
+
