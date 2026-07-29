@@ -29,6 +29,17 @@ const map = new maplibregl.Map({
 });
 
 map.on('load', function() {
+
+    // Use PapaParse to fetch and parse the CSV data from a Google Forms spreadsheet URL
+    
+    // Papa.parse(dataUrl, {
+    //     download: true, // Tells PapaParse to fetch the CSV data from the URL
+    //     header: true, // Assumes the first row of your CSV are column headers
+    //     complete: (results) => {
+    //         processData(results.data);
+    //     }
+    // });
+
     // Load Polygons of Campus
 
     map.addSource('polygons',{
@@ -67,24 +78,20 @@ map.on('load', function() {
         map.flyTo({center: centerpt, zoom: 15});
 
         // load events and testimonies
-        // Use PapaParse to fetch and parse the CSV data from a Google Forms spreadsheet URL
-    
         Papa.parse(dataUrl, {
-            download: true, // Tells PapaParse to fetch the CSV data from the URL
-            header: true, // Assumes the first row of your CSV are column headers
+            download: true,
+            header: true,
             complete: (results) => {
-                processData(results.data);
-            }
-        });
+                const data = results.data
+                // Process n stuff
+                console.log(data)
+                data.forEach(feature => {
+                    let evt_area = feature.Address;
+                    if (evt_area==area) processFeature(feature)
+                })
+            
+        }})
     })
-
-    //         let S_Campus = turf.polygon(data.features[0].geometry.coordinates);
-    //         let N_Campus = turf.polygon(data.features[1].geometry.coordinates);
-    //         let C_Campus = turf.polygon(data.features[2].geometry.coordinates);
-    //         let Hill = turf.polygon(data.features[3].geometry.coordinates);
-    //         let Med = turf.polygon(data.features[4].geometry.coordinates);
-    //     return S_Campus, N_Campus, C_Campus, Hill, Med
-    // })
 
 
     /* Load Targets
@@ -104,6 +111,42 @@ map.on('load', function() {
     }), 'top-right'); */
 });
 
+
+function processFeature(feature){
+    let IDarray = new Array()
+    let ID, lng, lat, location, action, date, repression, memory, call, form;
+    console.log(feature);
+        ID = feature.ID;
+        lng = feature.lng;
+        lat = feature.lat;
+        location = feature["Mapping Location"];
+        action = feature.Name;
+        date = feature.Date;
+        year = feature.Year;
+        memory = feature["What was the most memorable part of the action? "];
+        call = feature["Short Description/Call"];
+        form = feature["Action Form"];
+
+        repression = feature["Did the university engage or respond to this action in any way? "];
+        if (repression == "Yes") {
+            repression = feature["If yes, how? "];
+        }
+        /*if (year == displayYear) {*/
+            //if testimonial exists AND the event has not already been added:
+            if (memory != false && IDarray.includes(ID) == false){
+                IDarray.push(ID);
+                addTestimonial(lng,lat,ID,location,action,date,repression,memory,call, form);
+            }
+            //else if testimonial exists for an already-added event:
+            else if (memory != false){
+                repeatTestimonial(repression,memory, form);
+            }
+            //else, the action has no testimony
+            else {
+                addAction(lat,lng,location,action,date,call, form);
+            }
+        /*}*/
+    }; 
 
 function processData(results){
     let IDarray = new Array(30);
@@ -153,7 +196,7 @@ function processData(results){
     // var SC_Events = turf.pointsWithinPolygon(all_events, S_Campus);
     // console.log(SC_Events)
 
-
+    return all_events
 
 }
 
