@@ -57,6 +57,28 @@ main {
   margin-bottom: 20px;
 }
 
+details summary {
+    color: #6A7FDE;
+    cursor: pointer;
+}
+
+details summary:hover {
+    color: #DE7D6A;
+}
+
+.instructions {
+    padding: 20px;
+    text-align: center;
+}
+
+.instructions h2 {
+    margin-bottom: 15px;
+}
+
+.instructions p {
+    line-height: 1.5;
+}
+
 .testimonyChunk {
     margin-bottom: 25px; /* put spaces between the testimonials */
     text-align: center;

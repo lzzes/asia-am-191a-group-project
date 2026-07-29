@@ -1,6 +1,7 @@
 // Declare global variables
 
 let markers = []; //need this for the polygon layer to reset when you click on new polygon
+let currentPopup = null;
 
 /*let displayYear = 2023;
 
@@ -74,18 +75,23 @@ map.on('load', function() {
         let area = e.features[0].properties.Region
         console.log(area);
 
+        if (currentPopup) { //remove any old popups if on the screen
+            currentPopup.remove();
+            currentPopup = null;
+        }
+
         //remove old markers
         markers.forEach(marker => marker.remove());
         markers = [];
 
         //remove old testimonials
-        document.getElementById("testimonies").innerHTML = "";
+        document.getElementById("testimonies").innerHTML = "";   
         document.getElementById("actions").innerHTML = "";
 
         // Zoom to the centroid
         let centerpt = turf.centroid(e.features[0]).geometry.coordinates;
         console.log(centerpt);
-        map.flyTo({center: centerpt, zoom: 15});
+        map.flyTo({center: centerpt, zoom: 16});
 
         // load events and testimonies
         Papa.parse(dataUrl, {
@@ -99,7 +105,17 @@ map.on('load', function() {
                     let evt_area = feature.Address;
                     if (evt_area==area) processFeature(feature)
                 })
-            
+                
+                 document.getElementById("testimonies").innerHTML = `
+                    <div class="instructions">
+                        <h2>Explore this Area</h2>
+                        <p>
+                            Click on an action marker on the map to see
+                            information about that action and any available
+                            testimonials. Or, click on another area to see what's there.
+                        </p>
+                    </div> `;
+
         }})
     })
 
@@ -122,7 +138,7 @@ map.on('load', function() {
 });
 
 
-function processFeature(feature){
+/*function processFeature(feature){
     let IDarray = new Array()
     let ID, lng, lat, location, action, date, repression, memory, call, form;
     console.log(feature);
@@ -143,7 +159,7 @@ function processFeature(feature){
         }
         /*if (year == displayYear) {*/
             //if testimonial exists AND the event has not already been added:
-            if (memory != false && IDarray.includes(ID) == false){
+           /*  if (memory != false && IDarray.includes(ID) == false){
                 IDarray.push(ID);
                 addTestimonial(lng,lat,ID,location,action,date,repression,memory,call, form);
             }
@@ -155,8 +171,41 @@ function processFeature(feature){
             else {
                 addAction(lat,lng,location,action,date,call, form);
             }
-        /*}*/
-    }; 
+        /*} */
+    //}; 
+
+
+    function processFeature(feature){
+
+    let ID = feature.ID;
+    let lng = feature.lng;
+    let lat = feature.lat;
+    let location = feature["Mapping Location"];
+    let action = feature.Name;
+    let date = feature.Date;
+    let memory = feature["What was the most memorable part of the action? "];
+    let call = feature["Short Description/Call"];
+    let form = feature["Action Form"];
+
+    let repression = feature["Did the university engage or respond to this action in any way? "];
+
+    if (repression == "Yes") {
+        repression = feature["If yes, how? "];
+    }
+
+    // ONLY create the marker here
+    addMarker(
+        lng,
+        lat,
+        action,
+        date,
+        form,
+        location,
+        call,
+        repression,
+        memory
+    );
+}
 
 function processData(results){
     let IDarray = new Array(30);
@@ -325,7 +374,7 @@ function addAction(lat,lng,location,action,date,call, form){
 
 //if we wanted to we could pass in the action type here. would have to go back a ways though
 // because we only arrive here by passing through at least one other function
-function addMarker(lng,lat,action, date, form){
+/*function addMarker(lng,lat,action, date, form){
     let popup_message = `<h2>${action}</h2> <h3>${date}</h3>`
 
     let clr;
@@ -344,6 +393,135 @@ function addMarker(lng,lat,action, date, form){
     markers.push(marker);
 
     return action;
+}*/
+
+function addMarker(lng, lat, action, date, form, location, call, repression, memory){
+
+    let popup_message = `<h2>${action}</h2> <h3>${date}</h3>`;
+
+    let clr;
+
+    if (form=="Walkout") clr = "#6A7FDE";
+    if (form=="Rally") clr = "#DE7D6A";
+    if (form=="Die-in") clr = "#DEC96A";
+    if (form=="Picket") clr = "#6CDE6A";
+    if (form=="Encampment") clr = "#AE6ADE";
+    if (form=="Other") clr = "#DE6ADE";
+
+    const marker = new maplibregl.Marker({color: clr})
+        .setLngLat([lng, lat])
+        .setPopup(
+            new maplibregl.Popup().setHTML(popup_message)
+        )
+        .addTo(map);
+
+    // Save marker so we can remove it when another polygon is clicked
+    markers.push(marker);
+
+    // When marker is clicked, show its information on the left
+    marker.getElement().addEventListener("click", function(e) {
+
+        // Prevent the click from also triggering the polygon
+        e.stopPropagation();
+
+        
+        showAction(
+            action,
+            date,
+            location,
+            call,
+            repression,
+            memory
+        );
+
+        map.flyTo({
+            center: [lng,lat],
+            zoom: 18});
+
+        marker.togglePopup();
+        
+        if (currentPopup) {
+            currentPopup.remove();
+        }
+
+        currentPopup = marker.getPopup();
+
+    });
+
+    return action;
+}
+
+function showAction(action, date, location, call, repression, memory){
+
+    const testimoniesDef = document.getElementById("testimonies");
+
+    // Clear whatever was previously being displayed
+    testimoniesDef.innerHTML = "";
+
+    // Create container
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("testimonyChunk");
+
+    // Action name
+    const heading = document.createElement("h2");
+    heading.textContent = action;
+
+    // Location + date
+    const heading4 = document.createElement("h3");
+    heading4.textContent = location + ", " + date;
+
+    // Action description
+    const desc = document.createElement("details");
+    const clickForCall = document.createElement("summary");
+    clickForCall.textContent = "Click here to see the action's call";
+
+    const callText = document.createElement("p");
+    callText.textContent = call;
+
+    desc.appendChild(clickForCall)
+    desc.appendChild(callText);
+    wrapper.appendChild(desc);
+
+
+    /*const testimonyHead = document.createElement("h3");
+    testimonyHead.textContent = "Testimonials";*/
+
+    wrapper.appendChild(heading);
+    wrapper.appendChild(heading4);
+    wrapper.appendChild(desc);
+    //wrapper.appendChild(testimonyHead);
+
+    /*const desc = document.createElement("p");
+    desc.textContent = call;
+
+    wrapper.appendChild(heading);
+    wrapper.appendChild(heading4);
+    wrapper.appendChild(desc);*/
+
+    // If there is a testimonial, display it
+    if (memory && memory !== "false") {
+
+        const testimonyHeading = document.createElement("h2");
+        testimonyHeading.textContent = "Testimony:";
+
+        const memoryParagraph = document.createElement("p");
+        memoryParagraph.textContent = '“' + memory + '”';
+
+        wrapper.appendChild(testimonyHeading);
+        wrapper.appendChild(memoryParagraph);
+
+        // Repression information
+        if (repression) {
+
+            const repressionParagraph = document.createElement("p");
+            repressionParagraph.textContent =
+                "University response: " + repression;
+
+            wrapper.appendChild(repressionParagraph);
+        }
+    }
+
+    testimoniesDef.appendChild(wrapper);
 }
 
 /* modal situation */
