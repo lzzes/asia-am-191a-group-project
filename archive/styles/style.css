@@ -26,17 +26,35 @@ body {
 main {
     display: grid;
     grid-template-areas:
+        "top top"
         "list map";
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 30% 70%;
+
+    grid-area: main;
+    padding: 10px 0;
 }
 
 header {
     grid-area: header;
+    background-color: rgb(137, 181, 114);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    
 }
 
-main {
-    grid-area: main;
-    padding: 10px;
+header h1 {
+    margin-bottom: 10px;
+}
+
+
+#top {
+  grid-area: top;
+  width: 100%;
 }
 
 #list {
@@ -52,9 +70,10 @@ main {
 
 #testimonies{
   width: 80%;
-  background-color: rgb(218, 213, 253);
+  background-color: white;
   padding: 20px;
   margin-bottom: 20px;
+  height: 70vh;
 }
 
 details summary {
@@ -86,18 +105,11 @@ details summary:hover {
     align-items: center;
 } 
 
-#actions{
-  background-color: rgb(114, 198, 133);
-  width: 80%;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
 
 
 #map {
     grid-area: map;
-    height: 80vh;
+    height: 70vh;
     row-gap: 10px;
     gap: 100px;
 

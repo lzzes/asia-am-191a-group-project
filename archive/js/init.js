@@ -15,8 +15,8 @@ function updateYear(yr) {
 }*/
 
 let mapOptions = {
-    "zoom": 15,
-    "center" : [-118.442199,34.072225],
+    "zoom": 14.5,
+    "center" : [-118.44624, 34.07057], //34.07057° N, 118.44624° W
 }
 
 let dataUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQl_X4nqI_LmgvWzm_OMkH-uAkYyf3T8M5wxARgbjR30lbC7cfztoJ6gEvmC57nV7sks846j5uEtaS_/pub?gid=592139015&single=true&output=csv"
@@ -86,7 +86,7 @@ map.on('load', function() {
 
         //remove old testimonials
         document.getElementById("testimonies").innerHTML = "";   
-        document.getElementById("actions").innerHTML = "";
+       // document.getElementById("actions").innerHTML = "";
 
         // Zoom to the centroid
         let centerpt = turf.centroid(e.features[0]).geometry.coordinates;
@@ -336,7 +336,7 @@ function repeatTestimonial(repression,memory){
     testimoniesDef.appendChild(wrapper);
 }
 
-function addAction(lat,lng,location,action,date,call, form){
+/*function addAction(lat,lng,location,action,date,call, form){
  //stuff i need to define in order to add things to portfolio section
     const actionsDef = document.getElementById("actions");
     const wrapper = document.createElement("div");
@@ -370,7 +370,7 @@ function addAction(lat,lng,location,action,date,call, form){
     actionsDef.appendChild(wrapper);
 
     addMarker(lng,lat,action, date, form);
-}
+} */
 
 //if we wanted to we could pass in the action type here. would have to go back a ways though
 // because we only arrive here by passing through at least one other function
@@ -463,7 +463,7 @@ function showAction(action, date, location, call, repression, memory){
     wrapper.classList.add("testimonyChunk");
 
     // Action name
-    const heading = document.createElement("h2");
+    const heading = document.createElement("h1");
     heading.textContent = action;
 
     // Location + date
@@ -556,7 +556,7 @@ window.onclick = function(event) {
     }
 }
 
-window.addEventListener("resize", scroller.resize);
+//window.addEventListener("resize", scroller.resize);
 
 function closeModal(e){
     let parentDiv = e.target.parentElement.id
