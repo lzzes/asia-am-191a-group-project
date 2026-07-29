@@ -29,16 +29,6 @@ const map = new maplibregl.Map({
 
 map.on('load', function() {
 
-    // Use PapaParse to fetch and parse the CSV data from a Google Forms spreadsheet URL
-    
-    // Papa.parse(dataUrl, {
-    //     download: true, // Tells PapaParse to fetch the CSV data from the URL
-    //     header: true, // Assumes the first row of your CSV are column headers
-    //     complete: (results) => {
-    //         processData(results.data);
-    //     }
-    // });
-
     // Load Polygons of Campus
 
     map.addSource('polygons',{
@@ -235,7 +225,6 @@ function processData(results){
         if (repression == "Yes") {
             repression = feature["If yes, how? "];
         }
-        /*if (year == displayYear) {*/
             //if testimonial exists AND the event has not already been added:
             if (memory != false && IDarray.includes(ID) == false){
                 IDarray.push(ID);
@@ -249,7 +238,7 @@ function processData(results){
             else {
                 addAction(lat,lng,location,action,date,call, form);
             }
-        /*}*/
+
     }); 
     
     let all_events = turf.points(pts)
@@ -298,7 +287,7 @@ function addTestimonial(lng,lat,ID,location,action,date,repression,memory,call, 
     const paragraph2 = document.createElement("p");
     paragraph2.textContent = 'Testified memory: "' + memory + '"';
 
-    // i don;t really know the guide online told me to do this. something about the divisions
+    // adding in the text and buttons
     wrapper.appendChild(newButton);
     wrapper.appendChild(heading3);
     wrapper.appendChild(desc);
@@ -328,7 +317,7 @@ function repeatTestimonial(repression,memory){
     const paragraph2 = document.createElement("p");
     paragraph2.textContent = 'Testified memory: "' + memory + '"';
 
-    // i don;t really know the guide online told me to do this. something about the divisions
+    // adding in all of the text
     wrapper.appendChild(heading);
     wrapper.appendChild(paragraph1);
     wrapper.appendChild(paragraph2);
@@ -469,7 +458,6 @@ span.onclick = function() {
   modal2.style.display = "none";
 }
 
-// When the user clicks anywhere outside of the modal, close it
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
@@ -488,22 +476,15 @@ window.onclick = function(event) {
     }
 }
 
-//window.addEventListener("resize", scroller.resize);
 
 function closeModal(e){
     let parentDiv = e.target.parentElement.id
     console.log(parentDiv)
-    /*if(parentDiv != "surveyBtn"){
-        modal.style.display = "none";
-    }
-    if(parentDiv == "menuButtons"){
-        modal.style.display = "none";
-    }*/
+
 }
 document.body.addEventListener('click', function(e) {
     closeModal(e)
-        // your code
-    // console.log(e.target.id)
+
 });
 
 
