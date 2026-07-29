@@ -8,16 +8,7 @@ let selectedArea = null; // to store area polygon clicked state
 let selectedYear = null; // to store year button state
 let allEventData = []; //to store all the survey data
 
-/*let displayYear = 2023;
 
-const btn = document.querySelector("#yr2023");
-btn.addEventListener("click", () => {updateYear(2024)});
-
-function updateYear(yr) {
-    displayYear = yr;
-    console.log("clicl");
-    location.reload();
-}*/
 
 let mapOptions = {
     "zoom": 14.5,
@@ -100,22 +91,6 @@ map.on('load', function() {
         updateDisplay();
     })
 
-
-    /* Load Targets
-    const targets = {
-        'Walkout':'Walkout',
-        'Rally':'Rally',
-        'Die-in':'Die-in',
-        'Picket':'Picket',
-        'Encampment':'Encampment',
-        'Other':'Other'
-    };
-    map.addControl(new MaplibreLegendControl.MaplibreLegendControl(targets, {
-        showDefault: false, 
-        showCheckbox: false, 
-        onlyRendered: true,
-        reverseOrder: true
-    }), 'top-right'); */
 });
 
 function updateDisplay(){
@@ -201,44 +176,7 @@ function setupYearButtons(){
  
 
 
-/*function processFeature(feature){
-    let IDarray = new Array()
-    let ID, lng, lat, location, action, date, repression, memory, call, form;
-    console.log(feature);
-        ID = feature.ID;
-        lng = feature.lng;
-        lat = feature.lat;
-        location = feature["Mapping Location"];
-        action = feature.Name;
-        date = feature.Date;
-        year = feature.Year;
-        memory = feature["What was the most memorable part of the action? "];
-        call = feature["Short Description/Call"];
-        form = feature["Action Form"];
-
-        repression = feature["Did the university engage or respond to this action in any way? "];
-        if (repression == "Yes") {
-            repression = feature["If yes, how? "];
-        }
-        /*if (year == displayYear) {*/
-            //if testimonial exists AND the event has not already been added:
-           /*  if (memory != false && IDarray.includes(ID) == false){
-                IDarray.push(ID);
-                addTestimonial(lng,lat,ID,location,action,date,repression,memory,call, form);
-            }
-            //else if testimonial exists for an already-added event:
-            else if (memory != false){
-                repeatTestimonial(repression,memory, form);
-            }
-            //else, the action has no testimony
-            else {
-                addAction(lat,lng,location,action,date,call, form);
-            }
-        /*} */
-    //}; 
-
-
-    function processFeature(feature){
+function processFeature(feature){
 
     let ID = feature.ID;
     let lng = feature.lng;
@@ -315,8 +253,6 @@ function processData(results){
     }); 
     
     let all_events = turf.points(pts)
-    // var SC_Events = turf.pointsWithinPolygon(all_events, S_Campus);
-    // console.log(SC_Events)
 
     return all_events
 
@@ -399,64 +335,7 @@ function repeatTestimonial(repression,memory){
     testimoniesDef.appendChild(wrapper);
 }
 
-/*function addAction(lat,lng,location,action,date,call, form){
- //stuff i need to define in order to add things to portfolio section
-    const actionsDef = document.getElementById("actions");
-    const wrapper = document.createElement("div");
-    wrapper.classList.add("testimonyChunk");
 
-    // all of da button stuffs
-    const newButton = document.createElement("button"); 
-    newButton.id = "button"+action;
-    newButton.innerHTML = action;
-    newButton.setAttribute("lat",lat);
-    newButton.setAttribute("lng",lng);
-    newButton.classList.add("button-17")
-    newButton.addEventListener('click', function(){
-        map.flyTo({
-            center: [lng,lat],
-            zoom: 19
-        })
-    });
-   
-    // make a new header w the location + date
-    const heading = document.createElement("h4");
-    heading.textContent = location + ", " + date;  
-
-    const desc = document.createElement("p");
-    desc.textContent = call;
-
-    // i don;t really know the guide online told me to do this. something about the divisions
-    wrapper.appendChild(newButton);
-    wrapper.appendChild(heading);
-    wrapper.appendChild(desc);
-    actionsDef.appendChild(wrapper);
-
-    addMarker(lng,lat,action, date, form);
-} */
-
-//if we wanted to we could pass in the action type here. would have to go back a ways though
-// because we only arrive here by passing through at least one other function
-/*function addMarker(lng,lat,action, date, form){
-    let popup_message = `<h2>${action}</h2> <h3>${date}</h3>`
-
-    let clr;
-    if (form=="Walkout") clr = "#6A7FDE"
-    if (form=="Rally") clr = "#DE7D6A"
-    if (form=="Die-in") clr = "#DEC96A"
-    if (form=="Picket") clr = "#6CDE6A"
-    if (form=="Encampment") clr = "#AE6ADE"
-    if (form == "Other") clr = "#DE6ADE"
-
-   const marker = new maplibregl.Marker({color: clr})
-        .setLngLat([lng, lat])
-        .setPopup(new maplibregl.Popup().setHTML(popup_message))
-        .addTo(map);
-
-    markers.push(marker);
-
-    return action;
-}*/
 
 function addMarker(lng, lat, action, date, form, location, call, repression, memory){
 
@@ -546,20 +425,10 @@ function showAction(action, date, location, call, repression, memory){
     wrapper.appendChild(desc);
 
 
-    /*const testimonyHead = document.createElement("h3");
-    testimonyHead.textContent = "Testimonials";*/
-
     wrapper.appendChild(heading);
     wrapper.appendChild(heading4);
     wrapper.appendChild(desc);
-    //wrapper.appendChild(testimonyHead);
 
-    /*const desc = document.createElement("p");
-    desc.textContent = call;
-
-    wrapper.appendChild(heading);
-    wrapper.appendChild(heading4);
-    wrapper.appendChild(desc);*/
 
     // If there is a testimonial, display it
     if (memory && memory !== "false") {
