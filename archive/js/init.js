@@ -1,5 +1,7 @@
 // Declare global variables
 
+let markers = []; //need this for the polygon layer to reset when you click on new polygon
+
 /*let displayYear = 2023;
 
 const btn = document.querySelector("#yr2023");
@@ -71,6 +73,14 @@ map.on('load', function() {
 
         let area = e.features[0].properties.Region
         console.log(area);
+
+        //remove old markers
+        markers.forEach(marker => marker.remove());
+        markers = [];
+
+        //remove old testimonials
+        document.getElementById("testimonies").innerHTML = "";
+        document.getElementById("actions").innerHTML = "";
 
         // Zoom to the centroid
         let centerpt = turf.centroid(e.features[0]).geometry.coordinates;
@@ -326,10 +336,13 @@ function addMarker(lng,lat,action, date, form){
     if (form=="Encampment") clr = "#AE6ADE"
     if (form == "Other") clr = "#DE6ADE"
 
-    new maplibregl.Marker({color: clr})
+   const marker = new maplibregl.Marker({color: clr})
         .setLngLat([lng, lat])
         .setPopup(new maplibregl.Popup().setHTML(popup_message))
-        .addTo(map)
+        .addTo(map);
+
+    markers.push(marker);
+
     return action;
 }
 
@@ -382,7 +395,6 @@ document.body.addEventListener('click', function(e) {
         // your code
     // console.log(e.target.id)
 });
-
 
 
 
