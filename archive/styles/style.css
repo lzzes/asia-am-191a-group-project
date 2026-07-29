@@ -5,6 +5,11 @@
     box-sizing: border-box;
 }
 
+#year button.active-year {
+    background-color: #631210;
+    color: white;
+}
+
 html{
     background-color: rgb(251, 253, 213);
 }

@@ -3,6 +3,11 @@
 let markers = []; //need this for the polygon layer to reset when you click on new polygon
 let currentPopup = null;
 
+//
+let selectedArea = null; // to store area polygon clicked state
+let selectedYear = null; // to store year button state
+let allEventData = []; //to store all the survey data
+
 /*let displayYear = 2023;
 
 const btn = document.querySelector("#yr2023");
@@ -70,53 +75,29 @@ map.on('load', function() {
       }
     });
 
+    Papa.parse(dataUrl, {
+    download: true,
+    header: true,
+    complete: (results) => {
+        allEventData = results.data;
+        console.log("Loaded", allEventData.length, "rows from the spreadsheet");
+        }
+    });
+    
+    setupYearButtons();
     map.on('click','polygons-fill', (e) => {
 
-        let area = e.features[0].properties.Region
+        let area = e.features[0].properties.Region;
         console.log(area);
 
-        if (currentPopup) { //remove any old popups if on the screen
-            currentPopup.remove();
-            currentPopup = null;
-        }
-
-        //remove old markers
-        markers.forEach(marker => marker.remove());
-        markers = [];
-
-        //remove old testimonials
-        document.getElementById("testimonies").innerHTML = "";   
-       // document.getElementById("actions").innerHTML = "";
+        selectedArea = area;   // ← this line was missing
 
         // Zoom to the centroid
         let centerpt = turf.centroid(e.features[0]).geometry.coordinates;
         console.log(centerpt);
         map.flyTo({center: centerpt, zoom: 16});
 
-        // load events and testimonies
-        Papa.parse(dataUrl, {
-            download: true,
-            header: true,
-            complete: (results) => {
-                const data = results.data
-                // Process n stuff
-                console.log(data)
-                data.forEach(feature => {
-                    let evt_area = feature.Address;
-                    if (evt_area==area) processFeature(feature)
-                })
-                
-                 document.getElementById("testimonies").innerHTML = `
-                    <div class="instructions">
-                        <h2>Explore this Area</h2>
-                        <p>
-                            Click on an action marker on the map to see
-                            information about that action and any available
-                            testimonials. Or, click on another area to see what's there.
-                        </p>
-                    </div> `;
-
-        }})
+        updateDisplay();
     })
 
 
@@ -136,6 +117,88 @@ map.on('load', function() {
         reverseOrder: true
     }), 'top-right'); */
 });
+
+function updateDisplay(){
+ 
+    // Remove any old popup that might still be open
+    if (currentPopup) {
+        currentPopup.remove();
+        currentPopup = null;
+    }
+ 
+    // Remove old markers from the map
+    markers.forEach(marker => marker.remove());
+    markers = [];
+ 
+    // Clear whatever was in the sidebar
+    document.getElementById("testimonies").innerHTML = "";
+ 
+    // If no polygon has been clicked yet, just show the starting instructions
+    if (selectedArea === null) {
+        document.getElementById("testimonies").innerHTML = `
+            <div class="instructions">
+                <h2>Explore the Map</h2>
+                <p>Click on a polygon to get started and see the actions that took place in that area.</p>
+            </div>`;
+        return;
+    }
+ 
+    // Filter the cached spreadsheet rows down to the selected area,
+    // and to the selected year if one has been picked
+    let matchingRows = allEventData.filter(row => {
+        let rowArea = row.Address;
+        let areaMatches = (rowArea == selectedArea);
+        let yearMatches = (selectedYear === null || row.Year == selectedYear);
+        return areaMatches && yearMatches;
+    });
+ 
+    matchingRows.forEach(row => processFeature(row));
+ 
+    let yearLabel = (selectedYear === null) ? "all years" : selectedYear;
+ 
+    document.getElementById("testimonies").innerHTML = `
+        <div class="instructions">
+            <h2>Explore Actions in ${selectedArea} (${yearLabel})</h2>
+            <p>
+                Click on an action marker on the map to see
+                information about that action and any available
+                testimonials. Or, click on another area, or another year, to see what's there.
+            </p>
+        </div>`;
+}
+
+
+function setupYearButtons(){
+ 
+    let yearButtons = document.querySelectorAll("#year button");
+ 
+    yearButtons.forEach(button => {
+ 
+        button.addEventListener("click", () => {
+ 
+            // The button's visible text is the year itself, e.g. "2023"
+            let clickedYear = button.textContent.trim();
+ 
+            if (selectedYear == clickedYear) {
+                // Clicking the already-selected year again clears the filter
+                selectedYear = null;
+            } else {
+                selectedYear = clickedYear;
+            }
+ 
+            // Update which button looks "active"
+            yearButtons.forEach(otherButton => {
+                otherButton.classList.remove("active-year");
+            });
+            if (selectedYear !== null) {
+                button.classList.add("active-year");
+            }
+ 
+            updateDisplay();
+        });
+    });
+}
+ 
 
 
 /*function processFeature(feature){
