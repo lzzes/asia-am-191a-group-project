@@ -12,7 +12,7 @@ let allEventData = []; //to store all the survey data
 
 let mapOptions = {
     "zoom": 14.5,
-    "center" : [-118.44624, 34.07057], //34.07057° N, 118.44624° W
+    "center" : [-118.4465, 34.0720], //34.07057° N, 118.44624° W
 }
 
 let dataUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQl_X4nqI_LmgvWzm_OMkH-uAkYyf3T8M5wxARgbjR30lbC7cfztoJ6gEvmC57nV7sks846j5uEtaS_/pub?gid=592139015&single=true&output=csv"
@@ -343,12 +343,12 @@ function addMarker(lng, lat, action, date, form, location, call, repression, mem
 
     let clr;
 
-    if (form=="Walkout") clr = "#6A7FDE";
+    if (form=="Walkout") clr = "#93a3eb";
     if (form=="Rally") clr = "#DE7D6A";
     if (form=="Die-in") clr = "#DEC96A";
     if (form=="Picket") clr = "#6CDE6A";
     if (form=="Encampment") clr = "#AE6ADE";
-    if (form=="Other") clr = "#DE6ADE";
+    if (form=="Other" || form=="Sit-in") clr = "#DE6ADE";
 
     const marker = new maplibregl.Marker({color: clr})
         .setLngLat([lng, lat])
@@ -405,11 +405,11 @@ function showAction(action, date, location, call, repression, memory){
     wrapper.classList.add("testimonyChunk");
 
     // Action name
-    const heading = document.createElement("h1");
+    const heading = document.createElement("h2");
     heading.textContent = action;
 
     // Location + date
-    const heading4 = document.createElement("h3");
+    const heading4 = document.createElement("h4");
     heading4.textContent = location + ", " + date;
 
     // Action description
@@ -433,7 +433,7 @@ function showAction(action, date, location, call, repression, memory){
     // If there is a testimonial, display it
     if (memory && memory !== "false") {
 
-        const testimonyHeading = document.createElement("h2");
+        const testimonyHeading = document.createElement("h3");
         testimonyHeading.textContent = "Testimony:";
 
         const memoryParagraph = document.createElement("p");
